@@ -1,17 +1,18 @@
-const apr = require('express').Router();
+const apiRoutes = require('express').Router();
 const { v4: uuidv4 } = require('uuid');
 const { readAndAppend, readFromFile, writeToFile } = require('../helpers/fsUtils');
 
-apr.get('/notes', (req, res) => 
+apiRoutes.get('/notes', (req, res) => 
     readFromFile('./db/db.json').then((data) => res.json(JSON.parse(data)))
 );
 
-apr.post('/notes', (req, res) => {
-    const note = req.body;
+apiRoutes.post('/notes', (req, res) => {
+    const { title, text } = req.body;
     
-    if (note) {
+    if (req.body) {
         const newNote = {
-            note,
+            title,
+            text,
             note_id: uuidv4(),
         };
         readAndAppend(newNote, './db/db.json');
@@ -26,4 +27,17 @@ apr.post('/notes', (req, res) => {
     }
 });
 
-module.exports = apr;
+apiRoutes.delete('/notes/:note_id', (req, res) => {
+    const noteId = req.params.note_id;
+    readFromFile('./db/db.json')
+        .then((data) => JSON.parse(data))
+        .then((json) => {
+            const result = json.filter((note) => note.note_id !== noteId);
+            
+            writeToFile('./db/db.json', result);
+
+            res.json(`Note ${noteId} has been deleted.`);
+        });
+});
+
+module.exports = apiRoutes;
