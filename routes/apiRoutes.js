@@ -1,5 +1,2 @@
-const {
-    getNotes,
-    saveNote,
-    
-} = require('../public/assets/js/index');
+const apiRoutes = require('express').Router();
+const { readAndAppend, ReadFromFile } = require()
