@@ -2,7 +2,7 @@ const express = require('express');
 const apiRoutes = require('./routes/apiRoutes');
 const htmlRoutes = require('./routes/htmlRoutes.js');
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 1337;
 
 const app = express();
 
